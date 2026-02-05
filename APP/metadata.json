@@ -1,0 +1,5 @@
+{
+  "name": "PropAssess - Assessment Fairness Analyzer",
+  "description": "A comprehensive dashboard for homeowners to analyze property assessment changes, compare against neighbors, and identify fairness discrepancies using open data visualization.",
+  "requestFramePermissions": []
+}
