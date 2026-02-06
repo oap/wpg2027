@@ -6,6 +6,21 @@ const DB_PATH = './public/properties.db';
 const CSV_PATH = './Assessment_Parcels.csv';
 
 const processFile = async () => {
+  // CHECK: If compressed DB exists, skip generation (deployment optimization)
+  if (fs.existsSync(`${DB_PATH}.gz`)) {
+    console.log(`Found existing compressed database at ${DB_PATH}.gz. Skipping generation.`);
+    return;
+  }
+
+  if (!fs.existsSync(CSV_PATH)) {
+    console.warn(`CSV file not found at ${CSV_PATH}. Build will fail if database is not already generated.`);
+    // If we are here, neither DB nor CSV exists. 
+    // But we just mistakenly established that if gz exists we return. 
+    // So if we are here, gz does NOT exist.
+    // And if CSV also does not exist, we must fail or warn.
+    throw new Error("Missing Assessment_Parcels.csv and no pre-built properties.db.gz found. Cannot build.");
+  }
+
   console.log(`Loading sql.js...`);
   const SQL = await initSqlJs();
   const db = new SQL.Database();

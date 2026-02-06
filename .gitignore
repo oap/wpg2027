@@ -19,3 +19,4 @@ yarn-debug.log*
 *.db
 APP/public/properties.db
 Assessment_Parcels*.csv
+!APP/public/properties.db.gz
