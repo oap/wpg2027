@@ -388,9 +388,19 @@ export default function App() {
           </div>
         </div>
 
-        <div className="mt-auto pt-8 text-xs text-slate-400">
+        <div className="mt-auto pt-8 text-xs text-slate-400 space-y-2">
           <p>{t('footerCopyright')}</p>
-          <p className="mt-1">{t('footerDisclaimer')}</p>
+          <p>{t('footerDisclaimer')}</p>
+          <p>
+            <a href="https://data.winnipeg.ca/Assessment-Taxation-Corporate/Assessment-Parcels/d4mq-wa44/about_data"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-indigo-500 underline decoration-dotted"
+            >
+              {t('footerSource')}
+            </a>
+          </p>
+          <p className="font-medium text-slate-500">{t('footerAffiliation')}</p>
         </div>
       </aside>
 
@@ -424,7 +434,7 @@ export default function App() {
               <h3 className="font-bold text-slate-800">{t('valueVsSize')}</h3>
               <span className="text-xs text-slate-400 bg-slate-50 px-2 py-1 rounded">{t('darkerHigherIncrease')}</span>
             </div>
-            <div className="h-64">
+            <div className="h-64" style={{ height: '16rem' }}>
               <ResponsiveContainer width="100%" height="100%">
                 <ScatterChart margin={{ top: 10, right: 30, left: 20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
@@ -471,7 +481,7 @@ export default function App() {
 
           <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
             <h3 className="font-bold text-slate-800 mb-6">{t('assessmentDist')}</h3>
-            <div className="h-64">
+            <div className="h-64" style={{ height: '16rem' }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={histogramData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
