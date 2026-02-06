@@ -16,6 +16,8 @@ export const translations = {
         max: "Max",
         footerCopyright: "© 2027 https://chefbig.ca",
         footerDisclaimer: "Data provided for analysis only.",
+        footerSource: "Data Source: City of Winnipeg Open Data",
+        footerAffiliation: "Not affiliated with the City of Winnipeg.",
 
         avgChange: "Avg. Change",
         comparedToPrev: "Compared to previous assessment",
@@ -77,6 +79,8 @@ export const translations = {
         max: "最大",
         footerCopyright: "© 2027 https://chefbig.ca",
         footerDisclaimer: "数据仅供分析参考。",
+        footerSource: "数据来源：温尼伯市开放数据",
+        footerAffiliation: "与温尼伯市政府无关。",
 
         avgChange: "平均涨幅",
         comparedToPrev: "与上一次评估相比",
