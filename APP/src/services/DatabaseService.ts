@@ -151,6 +151,9 @@ export class DatabaseService {
             JOIN neighborhoods n ON p.neighborhood_id = n.id
             JOIN streets s ON p.street_id = s.id
             ${where}
+            -- Exclude outliers for stats (e.g. data errors or empty lots turning into houses)
+            AND p.current_value > 1000 
+            AND p.percent_change < 5000
         `;
 
         const stmt = this.db.prepare(sql);
@@ -169,6 +172,47 @@ export class DatabaseService {
         stmt.free();
         console.timeEnd("StatsQuery");
         return result;
+    }
+
+    getHistogram(filters: FilterState): { name: string, count: number, sortKey: number }[] {
+        if (!this.db) return [];
+
+        console.time("HistogramQuery");
+        const { where, params } = this.buildQuery(filters);
+
+        // SQLite integer division behaves like floor for positive numbers
+        // Bucket size = 5. 
+        const sql = `
+            SELECT 
+                (CAST(p.percent_change AS INTEGER) / 5) * 5 as bucket, 
+                COUNT(*) as count
+            FROM properties p
+            JOIN neighborhoods n ON p.neighborhood_id = n.id
+            JOIN streets s ON p.street_id = s.id
+            ${where}
+            AND p.percent_change BETWEEN -100 AND 2000 -- Sanity limits for chart
+            GROUP BY bucket
+            ORDER BY bucket
+        `;
+
+        const stmt = this.db.prepare(sql);
+        const bindObj = params.reduce((acc, curr) => ({ ...acc, ...curr }), {});
+        stmt.bind(bindObj);
+
+        const results: { name: string, count: number, sortKey: number }[] = [];
+        while (stmt.step()) {
+            const row = stmt.getAsObject();
+            const bucket = row.bucket as number;
+            const count = row.count as number;
+            results.push({
+                name: `${bucket}% - ${bucket + 5}%`,
+                count,
+                sortKey: bucket
+            });
+        }
+        stmt.free();
+        console.timeEnd("HistogramQuery");
+        return results;
     }
 
     queryProperties(
