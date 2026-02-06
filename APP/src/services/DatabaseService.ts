@@ -27,8 +27,24 @@ export class DatabaseService {
                     locateFile: (file) => `/${file}`
                 });
 
-                const response = await fetch('/properties.db');
-                const buffer = await response.arrayBuffer();
+                console.log("Fetching compressed database...");
+                const response = await fetch('/properties.db.gz');
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch database: ${response.statusText}`);
+                }
+
+                // Decompress the stream
+                const ds = new DecompressionStream('gzip');
+                const decompressedStream = response.body?.pipeThrough(ds);
+
+                if (!decompressedStream) {
+                    throw new Error("Browser does not support piping body through DecompressionStream or body is null");
+                }
+
+                const newResponse = new Response(decompressedStream);
+                const buffer = await newResponse.arrayBuffer();
+
                 this.db = new SQL.Database(new Uint8Array(buffer));
                 console.log("Database loaded successfully");
             } catch (error) {

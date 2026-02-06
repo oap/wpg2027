@@ -195,6 +195,17 @@ const processFile = async () => {
   const buffer = Buffer.from(data);
   fs.writeFileSync(DB_PATH, buffer);
   console.log(`Saved database to ${DB_PATH} (${(buffer.length / 1024 / 1024).toFixed(2)} MB)`);
+
+  // GZIP Compression
+  // Import zlib
+  const zlib = await import('zlib');
+  const { promisify } = await import('util');
+  const gzip = promisify(zlib.gzip);
+
+  console.log(`Compressing database...`);
+  const compressed = await gzip(buffer);
+  fs.writeFileSync(`${DB_PATH}.gz`, compressed);
+  console.log(`Saved compressed database to ${DB_PATH}.gz (${(compressed.length / 1024 / 1024).toFixed(2)} MB)`);
 };
 
 processFile().catch(err => {
